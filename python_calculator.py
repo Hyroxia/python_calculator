@@ -125,6 +125,28 @@ def calculator_maths():
     calculator_maths_multiplication.grid_configure(row=13,column=3, sticky=NSEW)
     calculator_maths_division.grid_configure(row=14,column=3, sticky=NSEW)
 
+def calculator_io_operations_maths(unit):
+    global unit_holder
+    global full_calculation_string
+    global evaluated_string
+    if unit in ['*', '/', '-', '+']:
+        full_calculation_string.append(unit_holder)
+        full_calculation_string.append(unit)
+        unit_holder=''
+        evaluated_string = full_calculation_string
+    elif unit == '=':
+        full_calculation_string.append(unit_holder)
+        expression_string = ''.join(full_calculation_string)
+        try:
+            ex_ev = eval(expression_string)
+            evaluated_string.append(f'=')
+            evaluated_string.append(ex_ev)
+        except Exception as e:
+            evaluated_string = f'Error: {e}'
+    else:
+        unit_holder += unit
+    calculator_maths()
+
 def calculator_physics():
     clear_widgets()
     calculator_main()
@@ -187,28 +209,6 @@ def calculator_physics():
     calculator_physics_minus.grid_configure(row=12,column=3, sticky=NSEW)
     calculator_physics_multiplication.grid_configure(row=13,column=3, sticky=NSEW)
     calculator_physics_division.grid_configure(row=14,column=3, sticky=NSEW)
-
-def calculator_io_operations_maths(unit):
-    global unit_holder
-    global full_calculation_string
-    global evaluated_string
-    if unit in ['*', '/', '-', '+']:
-        full_calculation_string.append(unit_holder)
-        full_calculation_string.append(unit)
-        unit_holder=''
-        evaluated_string = full_calculation_string
-    elif unit == '=':
-        full_calculation_string.append(unit_holder)
-        expression_string = ''.join(full_calculation_string)
-        try:
-            ex_ev = eval(expression_string)
-            evaluated_string.append(f'=')
-            evaluated_string.append(ex_ev)
-        except Exception as e:
-            evaluated_string = f'Error: {e}'
-    else:
-        unit_holder += unit
-    calculator_maths()
     
 def calculator_io_operations_physics(unit):
     global unit_holder
