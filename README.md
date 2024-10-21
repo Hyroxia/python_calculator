@@ -1,4 +1,4 @@
 # python_calculator
 
-- supports multiplication, division, subtraction addition, parenthesis and exponents
+- supports multiplication, division, subtraction addition, parenthesis, exponents and trigs
 - contains a few maths and physics constants
