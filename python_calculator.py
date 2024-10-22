@@ -2,10 +2,12 @@ from tkinter import *
 from tkinter import ttk
 import math
 
-#planned expansion and refractoring of IO operations -> % and trigs
+#planned expansion and refractoring of IO operations -> trigs
 #draft plan for Constants implementation
 #look towards eventual frame implementation
 #Raise the limit (4300 digits) for integer string conversion; use sys.set_int_max_str_digits() to increase the limit
+#Address possible Order of Operations Problems 
+#SIN, COS, TAN expect radian, but given Degrees
     
 #Global Vars
 unit_holder = ''
@@ -64,16 +66,18 @@ def home_screen():
     
     welcome_text = Label(text="A Python Calculator", font="14", bg='#e6e6e6', fg="#2B2828")
     welcome_text_2 = Label(text="Created by:", font="14", bg='#e6e6e6', fg="#2B2828")
-    welcome_text_3 = Label(text="Slarmie, Hendricks, Laubser, Ndlovu", font="14", bg='#e6e6e6', fg="#2B2828")
-    welcome_text_4 = Label(text="In theory this was a good idea", font="14", bg='#e6e6e6', fg="#2B2828")
+    welcome_text_3 = Label(text="Hyroxia", font="14", bg='#e6e6e6', fg="#2B2828")
     warning_text_1 = Label(text="Note: All buttons that are light orange is non-funtional", font=(14), bg='#e6e6e6', fg="#2B2828")
+    warning_text_2 = Label(text="All buttons that are red are incorrectly configured", font=(14), bg='#e6e6e6', fg="#2B2828")
+    welcome_text_4 = Label(text="In theory this was a good idea", font="14", bg='#e6e6e6', fg="#2B2828")
     
     #configuring text
     welcome_text.grid_configure(row=2,column=0,columnspan=3,sticky=W)
     welcome_text_2.grid_configure(row=3,column=0,columnspan=3,sticky=W)
     welcome_text_3.grid_configure(row=4,column=0,columnspan=5,sticky=W)
-    welcome_text_4.grid_configure(row=27,column=0,columnspan=5,sticky=W)
     warning_text_1.grid_configure(row=6,column=0,columnspan=8, sticky=W)
+    warning_text_2.grid_configure(row=7,column=0,columnspan=8, sticky=W)
+    welcome_text_4.grid_configure(row=27,column=0,columnspan=5,sticky=W)
 
 def calculator_main():
     clear_widgets()
@@ -131,7 +135,12 @@ def calculator_io_operations(unit):
 
     # Handle mathematical operations and functions
     if unit in ['*', '/', '-', '+', '(', ')', 'tan(', 'sin(', 'cos(','sin⁻¹(', 'cos⁻¹(', 'tan⁻¹(','%']:
-        if unit == '(':
+        if unit in ['+','-','*','/']:
+            full_calculation_string.append(unit_holder)
+            unit_holder = ''
+            full_calculation_string.append(unit)
+        
+        if unit in ['(','sin(', 'cos(', 'tan(','sin⁻¹(', 'cos⁻¹(', 'tan⁻¹(']:
             # If there's a current number in unit_holder, append it before adding '('
             if unit_holder:
                 full_calculation_string.append(unit_holder)
@@ -145,22 +154,6 @@ def calculator_io_operations(unit):
                 full_calculation_string.append(unit_holder)
                 unit_holder = ''  # Clear the unit holder
             full_calculation_string.append(unit)  # Append ')'
-        
-        elif unit in ['sin(', 'cos(', 'tan(']:
-            # If there's a current number, append it before the function
-            if unit_holder:
-                full_calculation_string.append(unit_holder)
-                full_calculation_string.append('*')  # Implicit multiplication
-                unit_holder = ''  # Clear the unit holder
-            full_calculation_string.append(unit)  # Append the function
-            
-        elif unit in  ['sin⁻¹(', 'cos⁻¹(', 'tan⁻¹(']:
-            # If there's a current number, append it before the function
-            if unit_holder:
-                full_calculation_string.append(unit_holder)
-                full_calculation_string.append('*')  # Implicit multiplication
-                unit_holder = ''  # Clear the unit holder
-            full_calculation_string.append(unit)  # Append the function
             
         elif unit == '%':
             if unit_holder:
@@ -226,7 +219,7 @@ def calculator_maths():
         ("CE", 10, 1, lambda:calculator_io_operations('ce'), 1,"#003366","#e0ffff"),
         ("⌫", 10, 2, lambda:calculator_backspace(), 1,"#003366","#e0ffff"),
         ("0", 14, 0, lambda:calculator_io_operations('0'), 1,"#003366","#e0ffff"),
-        (",", 14, 1, lambda:calculator_io_operations('.'), 1,"#003366","#e0ffff"),
+        (".", 14, 1, lambda:calculator_io_operations('.'), 1,"#003366","#e0ffff"),
         ("=", 14, 2, lambda:calculator_io_operations('='), 1,"#003366","#e0ffff"),
         ("1", 13, 0, lambda:calculator_io_operations('1'), 1,"#003366","#e0ffff"),
         ("2", 13, 1, lambda:calculator_io_operations('2'), 1,"#003366","#e0ffff"),
@@ -247,9 +240,9 @@ def calculator_maths():
         ("%", 14, 4, lambda:calculator_io_operations('%'), 1, "#003366", "#e0ffff"),
         ("<", 10, 3, "#", 1, "#FFB74D", "#C62828"),
         (">", 10, 4, "#", 1, "#FFB74D", "#C62828"),
-        ("sin(", 10, 7, lambda:calculator_io_operations('sin('), 1, "#003366", "#e0ffff"),
-        ("cos(", 10, 8, lambda:calculator_io_operations('cos('), 1, "#003366", "#e0ffff"),
-        ("tan(", 10, 9, lambda:calculator_io_operations('tan('), 1, "#003366", "#e0ffff"),
+        ("sin(", 10, 7, lambda:calculator_io_operations('sin('), 1, "#dc143c", "#e0ffff"),
+        ("cos(", 10, 8, lambda:calculator_io_operations('cos('), 1, "#dc143c", "#e0ffff"),
+        ("tan(", 10, 9, lambda:calculator_io_operations('tan('), 1, "#dc143c", "#e0ffff"),
         ("sin⁻¹(", 11, 7, lambda:calculator_io_operations('sin⁻¹('), 1, "#003366", "#e0ffff"),
         ("cos⁻¹(", 11, 8, lambda:calculator_io_operations('cos⁻¹('), 1, "#003366", "#e0ffff"),
         ("tan⁻¹(", 11, 9, lambda:calculator_io_operations('tan⁻¹('), 1, "#003366", "#e0ffff"),
@@ -294,9 +287,9 @@ def calculator_physics():
         ("%", 14, 4, lambda:calculator_io_operations('%'), 1, "#003366", "#e0ffff"),
         ("<", 10, 3, "#", 1, "#FFB74D", "#C62828"),
         (">", 10, 4, "#", 1, "#FFB74D", "#C62828"),
-        ("sin(", 10, 7, lambda:calculator_io_operations('sin('), 1, "#003366", "#e0ffff"),
-        ("cos(", 10, 8, lambda:calculator_io_operations('cos('), 1, "#003366", "#e0ffff"),
-        ("tan(", 10, 9, lambda:calculator_io_operations('tan('), 1, "#003366", "#e0ffff"),
+        ("sin(", 10, 7, lambda:calculator_io_operations('sin('), 1, "#dc143c", "#e0ffff"),
+        ("cos(", 10, 8, lambda:calculator_io_operations('cos('), 1, "#dc143c", "#e0ffff"),
+        ("tan(", 10, 9, lambda:calculator_io_operations('tan('), 1, "#dc143c", "#e0ffff"),
         ("sin⁻¹(", 11, 7, lambda:calculator_io_operations('sin⁻¹('), 1, "#003366", "#e0ffff"),
         ("cos⁻¹(", 11, 8, lambda:calculator_io_operations('cos⁻¹('), 1, "#003366", "#e0ffff"),
         ("tan⁻¹(", 11, 9, lambda:calculator_io_operations('tan⁻¹('), 1, "#003366", "#e0ffff"),
