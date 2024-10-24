@@ -6,14 +6,13 @@ import math
 #draft plan for Constants implementation -> Delayed
 #look towards eventual frame implementation -> Delayed
 
-#Consider Implementing 2-4 of the below options before Nov 11 2024
+#Consider Implementing 2-4 of the below options before Nov 11 2024 (1)
 #Raise the limit (4300 digits) for integer string conversion; use sys.set_int_max_str_digits() to increase the limit
-#error handling -> user readable errors to calculator
+#error handling -> user readable errors to calculator (50%)
 #history -> using SQLite3
 #Persistant Memory implementation -> MR
 #Keyboard input Support
 #Export History -> CSV/PDF/etc
-#Error Logging -> TXT
 #Config Options -> Light/Dark Mode / Save Preferences
 #Accessability -> Screen Reader, etc.
     
@@ -205,7 +204,7 @@ def calculator_io_operations(unit):
             ex_ev = eval(expression_string)  # Evaluate the expression
             evaluated_string = [f'=', ex_ev]  # Update evaluated string with the result
         except Exception as e:
-            evaluated_string = f'Error: {e}'
+            errorhandler(e)
     
     else:  # For number inputs or other characters
         unit_holder += unit  # Append the input to the unit holder
@@ -381,10 +380,25 @@ def constants_values():
 
     for lex_text, lex_row, lex_column, lex_columnspan, lex_bg, lex_fg, lex_sticky in const_physics_vals:
         label_creation(lex_text, lex_row, lex_column, lex_columnspan, lex_bg, lex_fg, lex_sticky)
+    
+def errorhandler(error):
+    global evaluated_string
+    if isinstance(error, ZeroDivisionError):
+        evaluated_string = f'Math Error - Cannot Divide by Zero'
+    elif isinstance(error, OverflowError):
+        evaluated_string = f'Math Error - Result too large'
+    elif isinstance(error, SyntaxError):
+        evaluated_string = f'Math Error - Possible missing trailing brackets or 2 Adjacent Operators \'+ /\''
+    else:
+        evaluated_string = f'System Error! - Logging Error code'
+        f_error_logger = open('python_calculator_error_log.txt','a')
+        f_error_logger.write(f'{error}')
+        f_error_logger.write('\n')
+        f_error_logger.close()
+    calculator_display()
         
 main_buttons()
 home_screen()
 
 #execute
 main_window.mainloop()
-
