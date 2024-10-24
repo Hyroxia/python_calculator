@@ -2,12 +2,20 @@ from tkinter import *
 from tkinter import ttk
 import math
 
-#planned expansion and refractoring of IO operations -> trigs
-#draft plan for Constants implementation
-#look towards eventual frame implementation
+#Faulty Colour scheme "#dc143c", "#e0ffff"
+#draft plan for Constants implementation -> Delayed
+#look towards eventual frame implementation -> Delayed
+
+#Consider Implementing 2-4 of the below options before Nov 11 2024
 #Raise the limit (4300 digits) for integer string conversion; use sys.set_int_max_str_digits() to increase the limit
-#Address possible Order of Operations Problems 
-#SIN, COS, TAN expect radian, but given Degrees
+#error handling -> user readable errors to calculator
+#history -> using SQLite3
+#Persistant Memory implementation -> MR
+#Keyboard input Support
+#Export History -> CSV/PDF/etc
+#Error Logging -> TXT
+#Config Options -> Light/Dark Mode / Save Preferences
+#Accessability -> Screen Reader, etc.
     
 #Global Vars
 unit_holder = ''
@@ -134,13 +142,13 @@ def calculator_io_operations(unit):
     global evaluated_string
 
     # Handle mathematical operations and functions
-    if unit in ['*', '/', '-', '+', '(', ')', 'tan(', 'sin(', 'cos(','sin⁻¹(', 'cos⁻¹(', 'tan⁻¹(','%']:
+    if unit in ['*', '/', '-', '+', '(', ')', 'tan((', 'sin((', 'cos((','sin⁻¹((', 'cos⁻¹((', 'tan⁻¹((','%']:
         if unit in ['+','-','*','/']:
             full_calculation_string.append(unit_holder)
             unit_holder = ''
             full_calculation_string.append(unit)
         
-        if unit in ['(','sin(', 'cos(', 'tan(','sin⁻¹(', 'cos⁻¹(', 'tan⁻¹(']:
+        if unit in ['(','sin((', 'cos((', 'tan((','sin⁻¹((', 'cos⁻¹((', 'tan⁻¹((']:
             # If there's a current number in unit_holder, append it before adding '('
             if unit_holder:
                 full_calculation_string.append(unit_holder)
@@ -186,12 +194,12 @@ def calculator_io_operations(unit):
         
         # Replace '^' with '**' for proper exponentiation
         expression_string = expression_string.replace('^', '**')
-        expression_string = expression_string.replace('sin(', 'math.sin(')
-        expression_string = expression_string.replace('cos(', 'math.cos(')
-        expression_string = expression_string.replace('tan(', 'math.tan(')
-        expression_string = expression_string.replace('sin⁻¹(', 'math.degrees(math.asin(')
-        expression_string = expression_string.replace('cos⁻¹(', 'math.degrees(math.acos(')
-        expression_string = expression_string.replace('tan⁻¹(', 'math.degrees(math.atan(')
+        expression_string = expression_string.replace('sin((', 'math.sin(math.radians(')
+        expression_string = expression_string.replace('cos((', 'math.cos(math.radians(')
+        expression_string = expression_string.replace('tan((', 'math.tan(math.radians(')
+        expression_string = expression_string.replace('sin⁻¹((', 'math.degrees(math.asin(')
+        expression_string = expression_string.replace('cos⁻¹((', 'math.degrees(math.acos(')
+        expression_string = expression_string.replace('tan⁻¹((', 'math.degrees(math.atan(')
         
         try:
             ex_ev = eval(expression_string)  # Evaluate the expression
@@ -240,12 +248,12 @@ def calculator_maths():
         ("%", 14, 4, lambda:calculator_io_operations('%'), 1, "#003366", "#e0ffff"),
         ("<", 10, 3, "#", 1, "#FFB74D", "#C62828"),
         (">", 10, 4, "#", 1, "#FFB74D", "#C62828"),
-        ("sin(", 10, 7, lambda:calculator_io_operations('sin('), 1, "#dc143c", "#e0ffff"),
-        ("cos(", 10, 8, lambda:calculator_io_operations('cos('), 1, "#dc143c", "#e0ffff"),
-        ("tan(", 10, 9, lambda:calculator_io_operations('tan('), 1, "#dc143c", "#e0ffff"),
-        ("sin⁻¹(", 11, 7, lambda:calculator_io_operations('sin⁻¹('), 1, "#003366", "#e0ffff"),
-        ("cos⁻¹(", 11, 8, lambda:calculator_io_operations('cos⁻¹('), 1, "#003366", "#e0ffff"),
-        ("tan⁻¹(", 11, 9, lambda:calculator_io_operations('tan⁻¹('), 1, "#003366", "#e0ffff"),
+        ("sin(", 10, 7, lambda:calculator_io_operations('sin(('), 1, "#003366","#e0ffff"),
+        ("cos(", 10, 8, lambda:calculator_io_operations('cos(('), 1, "#003366","#e0ffff"),
+        ("tan(", 10, 9, lambda:calculator_io_operations('tan(('), 1, "#003366","#e0ffff"),
+        ("sin⁻¹(", 11, 7, lambda:calculator_io_operations('sin⁻¹(('), 1, "#003366", "#e0ffff"),
+        ("cos⁻¹(", 11, 8, lambda:calculator_io_operations('cos⁻¹(('), 1, "#003366", "#e0ffff"),
+        ("tan⁻¹(", 11, 9, lambda:calculator_io_operations('tan⁻¹(('), 1, "#003366", "#e0ffff"),
         ]
     
     #takes all list info to the button_creation() function
@@ -287,12 +295,12 @@ def calculator_physics():
         ("%", 14, 4, lambda:calculator_io_operations('%'), 1, "#003366", "#e0ffff"),
         ("<", 10, 3, "#", 1, "#FFB74D", "#C62828"),
         (">", 10, 4, "#", 1, "#FFB74D", "#C62828"),
-        ("sin(", 10, 7, lambda:calculator_io_operations('sin('), 1, "#dc143c", "#e0ffff"),
-        ("cos(", 10, 8, lambda:calculator_io_operations('cos('), 1, "#dc143c", "#e0ffff"),
-        ("tan(", 10, 9, lambda:calculator_io_operations('tan('), 1, "#dc143c", "#e0ffff"),
-        ("sin⁻¹(", 11, 7, lambda:calculator_io_operations('sin⁻¹('), 1, "#003366", "#e0ffff"),
-        ("cos⁻¹(", 11, 8, lambda:calculator_io_operations('cos⁻¹('), 1, "#003366", "#e0ffff"),
-        ("tan⁻¹(", 11, 9, lambda:calculator_io_operations('tan⁻¹('), 1, "#003366", "#e0ffff"),
+        ("sin(", 10, 7, lambda:calculator_io_operations('sin(('), 1, "#003366","#e0ffff"),
+        ("cos(", 10, 8, lambda:calculator_io_operations('cos(('), 1, "#003366","#e0ffff"),
+        ("tan(", 10, 9, lambda:calculator_io_operations('tan(('), 1, "#003366","#e0ffff"),
+        ("sin⁻¹(", 11, 7, lambda:calculator_io_operations('sin⁻¹(('), 1, "#003366", "#e0ffff"),
+        ("cos⁻¹(", 11, 8, lambda:calculator_io_operations('cos⁻¹(('), 1, "#003366", "#e0ffff"),
+        ("tan⁻¹(", 11, 9, lambda:calculator_io_operations('tan⁻¹(('), 1, "#003366", "#e0ffff"),
         ("h", 12, 6, "#", 1, "#FFB74D", "#C62828"), #this is where the constants start
         ("G", 12, 7, "#", 1, "#FFB74D", "#C62828"),
         ("e", 12, 8, "#", 1, "#FFB74D", "#C62828"),
@@ -379,3 +387,4 @@ home_screen()
 
 #execute
 main_window.mainloop()
+
