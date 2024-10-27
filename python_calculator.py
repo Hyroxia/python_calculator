@@ -3,17 +3,19 @@ from tkinter import ttk
 import math
 
 #Faulty Colour scheme "#dc143c", "#e0ffff"
+#Non Operational Colour Scheme "#FFB74D", "#C62828"
+#Vibrant Colour Scheme -> Button BG #FF6F61 FG #FFFFFF - Label/Window BG #40E0D0 FG #2F4F4F
 #draft plan for Constants implementation -> Delayed
 #look towards eventual frame implementation -> Delayed
 
 #Consider Implementing 2-4 of the below options before Nov 11 2024 (1)
 #Raise the limit (4300 digits) for integer string conversion; use sys.set_int_max_str_digits() to increase the limit
 #error handling -> user readable errors to calculator (50%)
-#history -> using SQLite3
-#Persistant Memory implementation -> MR
+#history -> using SQLite3 or JSON
+#Persistant Memory implementation -> MR -> ???
 #Keyboard input Support
 #Export History -> CSV/PDF/etc
-#Config Options -> Light/Dark Mode / Save Preferences
+#Config Options -> Save Preferences - > store either as a txt or as a DB idk
 #Accessability -> Screen Reader, etc.
     
 #Global Vars
@@ -22,6 +24,10 @@ full_calculation_string = []
 evaluated_string = ''
 partial_expression_label = None
 full_expression_label = None
+changeable_bg_buttons = "#003366"
+changeable_fg_buttons = "#e0ffff"
+changeable_bg_windowlabel = "#e6e6e6"
+changeable_fg_windowlabel = "#2B2828"
 
 #creating the window and configuring it
 main_window = Tk()
@@ -30,6 +36,7 @@ main_window.title("DAMF Calculator")
 main_window.geometry("540x600")
 main_window.resizable(width=False, height=False)
 main_window.configure(bg='#e6e6e6')
+selected_colour = StringVar(value="Professional")
 
 #preventing the cells from collapsing when empty
 for num in range(1,50,1):
@@ -53,11 +60,15 @@ def main_buttons():
     home_button = Button(text='Home', font=(14), command=home_screen, bg='#003366', fg="#e0ffff")
     calculator_button = Button(text='Calculator', font=(14),command=calculator_main, bg='#003366', fg="#e0ffff")
     constants_button = Button(text='Constants',font=(14),command=constants_values, bg='#003366', fg="#e0ffff")
+    graphing_button = Button(text='Graphing',font=(14),command='#',bg="#FFB74D", fg="#C62828")
+    settings_button = Button(text='Settings', font=(14),command=settings,bg="#FFB74D", fg="#C62828")
 
     #Configuring the main buttons
     home_button.grid_configure(column=0,row=0)
     calculator_button.grid_configure(column=1,row=0)
     constants_button.grid_configure(column=2,row=0)
+    graphing_button.grid_configure(column=3, row=0, columnspan=2, sticky=NSEW)
+    settings_button.grid_configure(column=5, row=0, columnspan=2, sticky=NSEW)
 
 #This clears every widget on screen, then calls main_buttons to replace it onto the window
 def clear_widgets():
@@ -69,7 +80,7 @@ def clear_widgets():
 def home_screen():
    #all text to be shown
     clear_widgets()
-    main_window.geometry("540x600")
+    main_window.geometry("540x600") 
     
     welcome_text = Label(text="A Python Calculator", font="14", bg='#e6e6e6', fg="#2B2828")
     welcome_text_2 = Label(text="Created by:", font="14", bg='#e6e6e6', fg="#2B2828")
@@ -82,8 +93,8 @@ def home_screen():
     welcome_text.grid_configure(row=2,column=0,columnspan=3,sticky=W)
     welcome_text_2.grid_configure(row=3,column=0,columnspan=3,sticky=W)
     welcome_text_3.grid_configure(row=4,column=0,columnspan=5,sticky=W)
-    warning_text_1.grid_configure(row=6,column=0,columnspan=8, sticky=W)
-    warning_text_2.grid_configure(row=7,column=0,columnspan=8, sticky=W)
+    warning_text_1.grid_configure(row=6,column=0,columnspan=8,sticky=W)
+    warning_text_2.grid_configure(row=7,column=0,columnspan=8,sticky=W)
     welcome_text_4.grid_configure(row=27,column=0,columnspan=5,sticky=W)
 
 def calculator_main():
@@ -309,10 +320,6 @@ def calculator_physics():
     for ex_text, ex_row, ex_col, ex_command, ex_columnspan, ex_bg, ex_fg in physics_calculator_definitions:
         button_creation(ex_text, ex_row, ex_col, ex_command, ex_columnspan, ex_bg, ex_fg)
     
-    #Physics Constants
-    
-    #Physics Constants Display
-    
     #SI Units
     si_units_state = BooleanVar()
     
@@ -397,6 +404,36 @@ def errorhandler(error):
         f_error_logger.close()
     calculator_display()
         
+def settings():
+    global changeable_bg_buttons
+    global changeable_fg_buttons
+    global changeable_bg_windowlabel
+    global changeable_fg_windowlabel
+    global selected_colour
+    
+    clear_widgets()
+    main_window.geometry("540x600")
+    
+    #[text, row, column, command, columnspan, bg and fg] - Button [text, row, column, columnspan, bg, fg and sticky] - Label
+    settings_gui_setup = [
+        ("Appearance:", 2, 0, 2, changeable_bg_windowlabel, changeable_fg_windowlabel, W),
+        ("Rounding Value:", 5, 0, 2, changeable_bg_windowlabel, changeable_fg_windowlabel, W),
+        ("Exporting Options:", 8, 0, 2, changeable_bg_windowlabel, changeable_fg_windowlabel, W),
+        ]
+    
+    Radiobutton(main_window, text="Light", variable=selected_colour, value="Light", command="colour_changer").grid_configure(column=0, row=3, columnspan=2, sticky=W)
+    Radiobutton(main_window, text="Dark", variable=selected_colour, value="Dark", command="colour_changer").grid_configure(column=2, row=3, columnspan=2, sticky=W)
+    Radiobutton(main_window, text="Professional", variable=selected_colour, value="Professional", command="colour_changer").grid_configure(column=4, row=3, columnspan=2, sticky=W)
+    Radiobutton(main_window, text="Vibrant", variable=selected_colour, value="Vibrant", command="colour_changer").grid_configure(column=7, row=3, columnspan=2, sticky=W)
+
+    Radiobutton(main_window, text="CSV", variable="selected_colour", value="CSV", command="colour_changer").grid_configure(column=0, row=9, columnspan=2, sticky=W)
+    Radiobutton(main_window, text="JSON", variable="selected_colour", value="JSON", command="colour_changer").grid_configure(column=2, row=9, columnspan=2, sticky=W)
+    Radiobutton(main_window, text="TXT", variable="selected_colour", value="TXT", command="colour_changer").grid_configure(column=4, row=9, columnspan=2, sticky=W)
+    
+    for lex_text, lex_row, lex_column, lex_columnspan, lex_bg, lex_fg, lex_sticky in settings_gui_setup:
+        label_creation(lex_text, lex_row, lex_column, lex_columnspan, lex_bg, lex_fg, lex_sticky)
+
+    
 main_buttons()
 home_screen()
 
